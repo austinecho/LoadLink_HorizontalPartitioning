@@ -1,20 +1,54 @@
 **** DB01  ****
 
-** DocumentManagementReport.Image **
-Date Column: CreateDate (1 year)
-Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
+** dbo.BatchProcessingLog **
+Date Column: LogDate (1 years)
+Clustered Index: CIX_BatchProcessingLog_LogDate 
 
 -- Current --
 
 - PK
-	PK_Image
-	
+	PK_BatchProcessingLog
+
 - FK
-	FK_Image_Load
-	FK_Image_SourceFile
+	FK_BatchProcessingLog_ActivityTypeLookup
+	FK_BatchProcessingLog_BatchQueue
 	
 - Index
-	IX_Image_UploadId
+	N/A
+	
+- Constraint
+	N/A
+
+-- New --
+- PK
+	PK_BatchProcessingLog_ID
+	
+- FK
+	FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID
+	FK_BatchProcessingLog_BatchQueue_BatchId
+	
+- Index
+	N/A
+	
+- Constraint
+	N/A
+
+
+** dbo.ShipmentQueue **
+Date Column: Completed (1 year)
+Clustered Index: CIX_ShipmentQueue_Completed 
+
+-- Current --
+
+- PK
+	PK_ShipmentQueue
+	
+- FK
+	FK_ShipmentQueue_BatchQueue
+	FK_ShipmentQueue_TransactionType
+	
+- Index
+	IX_ShipmentQueue_BatchId_Completed_Incl
 	
 - Constraint
 	N/A
@@ -33,61 +67,60 @@ Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
 - Constraint
 	N/A
 
-** dbo.FastLaneDocs **
-Date Column: SubmittedDate (2 years)
-Clustered Index: CIX_FastLaneDocs_SubmittedDate
-
--- Current --
-
-- PK
-	PK_FastLaneDocs
-
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	DF__FastLaneD__RecSt__7FB5F314
-	DF__FastLaneD__Statu__7EC1CEDB
-	DF__FastLaneD__Submi__7DCDAAA2
-
--- New --
-- PK
-	PK_FastLaneDocs_FastLaneDocId_SubmittedDate
-	
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	DF_FastLaneDocs_SubmittedDate
-	DF_FastLaneDocs_StatusCode
-	DF_FastLaneDocs_RecStatus
-
 --====================================================================================================================
 --====================================================================================================================
 
 **** DataTeam4 ****
 
-** DocumentManagementReport.Image **
-Date Column: CreateDate (1 year)
-Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
+** dbo.BatchProcessingLog **
+Date Column: SubmittedDate (1 years)
+Clustered Index: CIX_BatchProcessingLog_LogDate
 
 -- Current --
 
 - PK
-	PK_Image
-	
+	PK_BatchProcessingLog
+
 - FK
-	FK_Image_Load
-	FK_Image_SourceFile
+	FK_BatchProcessingLog_ActivityTypeLookup
+	FK_BatchProcessingLog_BatchQueue
 	
 - Index
-	IX_Image_UploadId
+	N/A
+	
+- Constraint
+	N/A
+
+-- New --
+- PK
+	PK_BatchProcessingLog_ID
+	
+- FK
+	FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID
+	FK_BatchProcessingLog_BatchQueue_BatchId
+	
+- Index
+	N/A
+	
+- Constraint
+	N/A
+
+
+** dbo.ShipmentQueue **
+Date Column: Completed (1 year)
+Clustered Index: CIX_ShipmentQueue_Completed 
+
+-- Current --
+
+- PK
+	PK_ShipmentQueue
+	
+- FK
+	FK_ShipmentQueue_BatchQueue
+	FK_ShipmentQueue_TransactionType
+	
+- Index
+	IX_ShipmentQueue_BatchId_Completed_Incl
 	
 - Constraint
 	N/A
@@ -102,175 +135,6 @@ Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
 	
 - Index
 	IX_DocumentManagementReport_Image_UploadId_Incl
-	
-- Constraint
-	N/A
-
-** dbo.FastLaneDocs **
-Date Column: SubmittedDate (2 years)
-Clustered Index: CIX_FastLaneDocs_SubmittedDate
-
--- Current --
-
-- PK
-	PK_FastLaneDocs
-
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	DF__FastLaneD__RecSt__182C9B23
-	DF__FastLaneD__Statu__173876EA
-	DF__FastLaneD__Submi__164452B1
-
--- New --
-- PK
-	PK_FastLaneDocs_FastLaneDocId_SubmittedDate
-	
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	DF_FastLaneDocs_SubmittedDate
-	DF_FastLaneDocs_StatusCode
-	DF_FastLaneDocs_RecStatus
-	
---====================================================================================================================
---====================================================================================================================
-	
-**** DB02  ****
-
-** DocumentManagementReport.Image **
-Date Column: CreateDate (1 year)
-Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
-
--- Current --
-
-- PK
-	PK_Image
-	
-- FK
-	N/A
-	
-- Index
-	TestX_LoadID_cov
-	
-- Constraint
-	N/A
-
--- New --
-- PK
-	PK_DocumentManagementReport_Image_ImageId_CreateDate
-	
-- FK
-	N/A
-	
-- Index
-	IX_DocumentManagementReport_Image_LoadId_DocumentName_DocumentTypeId_StartTimeInWorkspaceDate_UpdateDate
-	
-- Constraint
-	N/A
-
-** dbo.FastLaneDocs **
-Date Column: SubmittedDate (2 years)
-Clustered Index: CIX_FastLaneDocs_SubmittedDate
-
--- Current --
-
-- PK
-	PK_FastLaneDocs
-
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	N/A
-
--- New --
-- PK
-	PK_FastLaneDocs_FastLaneDocId_SubmittedDate
-	
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	N/A
-
---====================================================================================================================
---====================================================================================================================
-
-**** DataTeam4 ****
-
-** DocumentManagementReport.Image **
-Date Column: CreateDate (1 year)
-Clustered Index: CIX_DocumentManagementReport_Image_CreateDate
-
--- Current --
-
-- PK
-	PK_Image
-	
-- FK
-	N/A
-	
-- Index
-	TestX_LoadID_cov
-	
-- Constraint
-	N/A
-
--- New --
-- PK
-	PK_DocumentManagementReport_Image_ImageId_CreateDate
-	
-- FK
-	N/A
-	
-- Index
-	IX_DocumentManagementReport_Image_LoadId_DocumentName_DocumentTypeId_StartTimeInWorkspaceDate_UpdateDate
-	
-- Constraint
-	N/A
-
-** dbo.FastLaneDocs **
-Date Column: SubmittedDate (2 years)
-Clustered Index: CIX_FastLaneDocs_SubmittedDate
-
--- Current --
-
-- PK
-	PK_FastLaneDocs
-
-- FK
-	N/A
-	
-- Index
-	N/A
-	
-- Constraint
-	N/A
-
--- New --
-- PK
-	PK_FastLaneDocs_FastLaneDocId_SubmittedDate
-	
-- FK
-	N/A
-	
-- Index
-	N/A
 	
 - Constraint
 	N/A
