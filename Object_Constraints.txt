@@ -58,8 +58,8 @@ Clustered Index: CIX_ShipmentQueue_Completed
 	PK_DocumentManagementReport_Image_ImageId_CreateDate
 	
 - FK
-	FK_DocumentManagementReport_Image_DocumentManagementReport_Load_LoadID
-	FK_DocumentManagementReport_Image_DocumentManagementReport_SourceFile_SourceFileId
+	FK_ShipmentQueue_BatchQueue_BatchId
+	FK_ShipmentQueue_TransactionTypeLookup_TypeID
 	
 - Index
 	IX_DocumentManagementReport_Image_UploadId_Incl

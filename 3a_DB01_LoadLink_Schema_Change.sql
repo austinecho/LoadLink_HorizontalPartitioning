@@ -1,6 +1,6 @@
 /*
 DataTeam
-databaseName Partitioning
+LoadLink Partitioning
 
 DBA:
 -Monitor Transaction Logs and Blocking throughout process
@@ -18,7 +18,7 @@ DBA:
 
 Run in DB01VPRD Equivilant 
 */
-USE databaseName
+USE LoadLink
 GO
 
 --===================================================================================================
@@ -37,35 +37,103 @@ ELSE BEGIN PRINT 'ERROR: Server name not found. Process stopped.'; RETURN; END;
 --===================================================================================================
 --[REMOVE FK]
 --===================================================================================================
---PRINT '*****************';
---PRINT '*** Remove FK ***';
---PRINT '*****************';
+PRINT '*****************';
+PRINT '*** Remove FK ***';
+PRINT '*****************';
 
 
-----************************************************
---PRINT 'Working on table [dbo].[tblLoadStop] ...'; 
+--************************************************
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...'; 
 
---IF EXISTS (   SELECT 1
---              FROM   sys.foreign_keys
---              WHERE  name = 'FK_tblLoadStop_tblLoadCustomer'
---                AND  parent_object_id = OBJECT_ID( N'dbo.tblLoadStop' ))
---BEGIN
---    ALTER TABLE dbo.tblLoadStop DROP CONSTRAINT FK_tblLoadStop_tblLoadCustomer;
---    PRINT '- FK [FK_tblLoadStop_tblLoadCustomer] Dropped';
---END;
---ELSE IF EXISTS (   SELECT 1
---                   FROM   sys.foreign_keys
---                   WHERE  name = 'FK_tblLoadStop_tblLoadCustomer_LoadCustomerID'
---                     AND  parent_object_id = OBJECT_ID( N'dbo.tblLoadStop' ))
---	BEGIN
---	    ALTER TABLE dbo.tblLoadStop DROP CONSTRAINT FK_tblLoadStop_tblLoadCustomer_LoadCustomerID;
---	    PRINT '- FK [FK_tblLoadStop_tblLoadCustomer_LoadCustomerID] Dropped';
---	END;
---ELSE
---BEGIN
---    PRINT '!! WARNING: Foreign Key not found !!';
---END;
---GO
+IF EXISTS (   SELECT 1
+              FROM   sys.foreign_keys
+              WHERE  name = 'FK_BatchProcessingLog_ActivityTypeLookup'
+                AND  parent_object_id = OBJECT_ID( N'dbo.BatchProcessingLog' ))
+BEGIN
+    ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup;
+    PRINT '- FK [FK_BatchProcessingLog_ActivityTypeLookup] Dropped';
+END;
+ELSE IF EXISTS (   SELECT 1
+                   FROM   sys.foreign_keys
+                   WHERE  name = 'FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID'
+                     AND  parent_object_id = OBJECT_ID( N'dbo.BatchProcessingLog' ))
+	BEGIN
+	    ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID;
+	    PRINT '- FK [FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID] Dropped';
+	END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Foreign Key not found !!';
+END;
+GO
+
+IF EXISTS (   SELECT 1
+              FROM   sys.foreign_keys
+              WHERE  name = 'FK_BatchProcessingLog_BatchQueue'
+                AND  parent_object_id = OBJECT_ID( N'dbo.BatchProcessingLog' ))
+BEGIN
+    ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT FK_BatchProcessingLog_BatchQueue;
+    PRINT '- FK [FK_BatchProcessingLog_BatchQueue] Dropped';
+END;
+ELSE IF EXISTS (   SELECT 1
+                   FROM   sys.foreign_keys
+                   WHERE  name = 'FK_BatchProcessingLog_BatchQueue_BatchId'
+                     AND  parent_object_id = OBJECT_ID( N'dbo.BatchProcessingLog' ))
+	BEGIN
+	    ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT FK_BatchProcessingLog_BatchQueue_BatchId;
+	    PRINT '- FK [FK_BatchProcessingLog_BatchQueue_BatchId] Dropped';
+	END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Foreign Key not found !!';
+END;
+GO
+
+PRINT 'Working on table [dbo].[dbo.ShipmentQueue ] ...'; 
+
+IF EXISTS (   SELECT 1
+              FROM   sys.foreign_keys
+              WHERE  name = 'FK_ShipmentQueue_BatchQueue'
+                AND  parent_object_id = OBJECT_ID( N'dbo.ShipmentQueue' ))
+BEGIN
+    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT FK_ShipmentQueue_BatchQueue;
+    PRINT '- FK [FK_ShipmentQueue_BatchQueue] Dropped';
+END;
+ELSE IF EXISTS (   SELECT 1
+                   FROM   sys.foreign_keys
+                   WHERE  name = 'FK_ShipmentQueue_BatchQueue_BatchId'
+                     AND  parent_object_id = OBJECT_ID( N'dbo.ShipmentQueue' ))
+	BEGIN
+	    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT FK_ShipmentQueue_BatchQueue_BatchId;
+	    PRINT '- FK [FK_ShipmentQueue_BatchQueue_BatchId] Dropped';
+	END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Foreign Key not found !!';
+END;
+GO
+
+IF EXISTS (   SELECT 1
+              FROM   sys.foreign_keys
+              WHERE  name = 'FK_ShipmentQueue_TransactionType'
+                AND  parent_object_id = OBJECT_ID( N'dbo.ShipmentQueue' ))
+BEGIN
+    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT FK_ShipmentQueue_TransactionType;
+    PRINT '- FK [FK_ShipmentQueue_TransactionType] Dropped';
+END;
+ELSE IF EXISTS (   SELECT 1
+                   FROM   sys.foreign_keys
+                   WHERE  name = 'FK_ShipmentQueue_TransactionTypeLookup_TypeID'
+                     AND  parent_object_id = OBJECT_ID( N'dbo.ShipmentQueue' ))
+	BEGIN
+	    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT FK_ShipmentQueue_TransactionTypeLookup_TypeID;
+	    PRINT '- FK [FK_ShipmentQueue_TransactionTypeLookup_TypeID] Dropped';
+	END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Foreign Key not found !!';
+END;
+GO
 
 
 --===================================================================================================
@@ -76,17 +144,30 @@ PRINT '*** Remove PK/Clustered ***';
 PRINT '***************************';
 
 --************************************************
-PRINT 'Working on table [schemaName].[tableName] ...';
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
 
 IF EXISTS (   SELECT 1
               FROM   sys.objects
               WHERE  type_desc = 'PRIMARY_KEY_CONSTRAINT'
-                AND  parent_object_id = OBJECT_ID( N'schemaName.tableName' )
-				AND  name = N'PUT PK NAME HERE'
+                AND  parent_object_id = OBJECT_ID( N'dbo.BatchProcessingLog' )
+				AND  name = N'PK_BatchProcessingLog'
           )
 BEGIN    
-	ALTER TABLE schemaName.tableName DROP CONSTRAINT --PK_tblLoadCustomer;
-    PRINT '- PK [PUT PK NAME HERE] Dropped';
+	ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT PK_BatchProcessingLog;
+    PRINT '- PK [PK_BatchProcessingLog] Dropped';
+END;
+
+PRINT 'Working on table [dbo].[ShipmentQueue] ...';
+
+IF EXISTS (   SELECT 1
+              FROM   sys.objects
+              WHERE  type_desc = 'PRIMARY_KEY_CONSTRAINT'
+                AND  parent_object_id = OBJECT_ID( N'dbo.ShipmentQueue' )
+				AND  name = N'PK_ShipmentQueue'
+          )
+BEGIN    
+	ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT PK_ShipmentQueue;
+    PRINT '- PK [PK_ShipmentQueue] Dropped';
 END;
 
 
@@ -97,21 +178,6 @@ END;
 --PRINT '*** Add Partition Columns ***';
 --PRINT '*****************************';
 
-----************************************************
---PRINT 'Working on table [dbo].[tblLoadStop] ...';
-
---IF NOT EXISTS (	SELECT 1
---				FROM sys.columns
---				WHERE name = 'CreatedDate'
---				AND object_id = OBJECT_ID(N'dbo.tblLoadStop'))
---BEGIN
---	ALTER TABLE dbo.tblLoadStop
---	ADD CreatedDate DATETIME NULL
---	PRINT '- Column [CreatedDate] Created';
---END;
---GO
-
-
 --===================================================================================================
 --[BACK FILL DATA]
 --===================================================================================================
@@ -119,112 +185,12 @@ END;
 --PRINT '*** Back Fill Data ***';
 --PRINT '**********************';
 
-----************************************************
---PRINT 'Working on table [dbo].[tblLoadStop] ...';
-
---BEGIN TRY
---	IF OBJECT_ID('tempdb..#LoadStopCreatedDate') IS NOT	NULL DROP TABLE #LoadStopCreatedDate;
---	CREATE TABLE #LoadStopCreatedDate (LoadStopCreatedDateID INT IDENTITY(1,1) PRIMARY KEY, LoadStopID INT, CreatedDate DATETIME);
-
---	WITH FirstLoadStopDate AS
---	(
---		SELECT LoadCustomerID, MIN(StopDate) AS StopDate
---		FROM dbo.tblLoadStop
---		GROUP BY LoadCustomerID
---		HAVING MIN(StopDate) IS NOT NULL
---	)
---	INSERT INTO #LoadStopCreatedDate(LoadStopID, CreatedDate)
---	SELECT ls.LoadStopID, CASE WHEN ls.StopDate IS NULL THEN flsd.StopDate ELSE ls.StopDate END AS CreatedDate
---	FROM dbo.tblLoadStop ls
---	INNER JOIN FirstLoadStopDate flsd ON ls.LoadCustomerID = flsd.LoadCustomerID
-
---	CREATE NONCLUSTERED INDEX IX_#LoadStopCreatedDate_LoadStopID_Incl
---	ON #LoadStopCreatedDate (LoadStopID)
---	INCLUDE (CreatedDate)
-
---	DECLARE @BatchCt INT;
---	DECLARE @LoopCt INT;
---	DECLARE @LoopMax INT;
-
---	SET @BatchCt = 500000
---	SET @LoopCt = ((SELECT MIN(LoadStopCreatedDateID) FROM #LoadStopCreatedDate)-1)
---	SET @LoopMax = (SELECT MAX(LoadStopCreatedDateID) FROM #LoadStopCreatedDate)
-
---	WHILE @LoopCt < @LoopMax
---	BEGIN
---		BEGIN TRANSACTION
-
---		UPDATE ls
---		SET ls.CreatedDate = lscd.CreatedDate
---		FROM dbo.tblLoadStop ls
---		INNER JOIN #LoadStopCreatedDate lscd ON ls.LoadStopID = lscd.LoadStopID
---		WHERE lscd.LoadStopCreatedDateID BETWEEN @LoopCt + 1 AND @LoopCt + @BatchCt;
-
---		SET @LoopCt = @LoopCt + @BatchCt
-
---		COMMIT TRANSACTION
---	END
-	
---	BEGIN TRANSACTION
---		UPDATE dbo.tblLoadStop
---		SET CreatedDate = '1753-01-01 00:00:00.000'
---		WHERE CreatedDate IS NULL
-
---		UPDATE dbo.tblLoadCustomer
---		SET CreateDate = '1753-01-01 00:00:00.000'
---		WHERE CreateDate IS NULL
---	COMMIT TRANSACTION
-	
---	PRINT '- Back fill data Done';
---END TRY
---BEGIN CATCH
---	IF @@TRANCOUNT > 0
---	BEGIN
---		ROLLBACK TRANSACTION;
---	END;
-
---	THROW;
---END CATCH;
-
-
 --===================================================================================================
 --[ALTER NULL COLUMN AND ADD DF]
 --===================================================================================================
-PRINT '************************************';
-PRINT '*** Alter NULL Column And Add DF ***';
-PRINT '************************************';
-
---******************************************************
-PRINT 'Working on table [dbo].[tblLoadCustomer] ...';
-
-IF EXISTS (   SELECT 1
-                  FROM   sys.default_constraints
-                  WHERE  name = 'CONSTRAINT NAME'
-                    AND  parent_object_id = OBJECT_ID( N'schemaName.tableName' ))
-BEGIN
-    ALTER TABLE schemaName.tableName DROP CONSTRAINT CONSTRAINTNAME
-    PRINT '- DF [CONSTRAINT NAME] Dropped';
-END;
-
-IF EXISTS (   SELECT 1
-              FROM   sys.columns
-              WHERE  name = 'columnName'
-                AND  object_id = OBJECT_ID( N'schemaName.tableName' )
-                AND  is_nullable = 1 )
-BEGIN
-    ALTER TABLE schemaName.tableName ALTER COLUMN columnName DATETIME NOT NULL;
-    PRINT '- Column [columnName] Changed to Not Null';
-END;
-
-IF NOT EXISTS (   SELECT 1
-                  FROM   sys.default_constraints
-                  WHERE  name = 'CONSTRAINT NAME'
-                    AND  parent_object_id = OBJECT_ID( N'schemaName.tableName' ))
-BEGIN
-    ALTER TABLE schemaName.tableName ADD CONSTRAINT CONSTRAINTNAME DEFAULT GETDATE() FOR columnName;
-    PRINT '- DF [CONSTRAINT NAME] Created';
-END;
-GO
+--PRINT '************************************';
+--PRINT '*** Alter NULL Column And Add DF ***';
+--PRINT '************************************';
 
 --===================================================================================================
 --[CREATE CLUSTERED INDEX]
@@ -234,18 +200,32 @@ PRINT '*** Create Clustered Index ***';
 PRINT '******************************';
 
 --************************************************
-PRINT 'Working on table [schemaName].[tableName] ...';
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
 
-IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_tableName_columnName' )
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_BatchProcessingLog_LogDate ' )
 BEGIN
-    DROP INDEX CIX_tableName_columnName ON schemaName.tableName;
-	PRINT '- Index [CIX_tableName_columnName] Dropped';
+    DROP INDEX CIX_BatchProcessingLog_LogDate  ON dbo.BatchProcessingLog;
+	PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Dropped';
 END;
 
-CREATE CLUSTERED INDEX CIX_tableName_columnName
-ON schemaName.tableName ( columnName ASC )
-WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_databaseName_partitionColumnType_partitionRange(columnName);
-PRINT '- Index [CIX_tableName_columnName] Created';
+CREATE CLUSTERED INDEX CIX_BatchProcessingLog_LogDate 
+ON dbo.BatchProcessingLog ( LogDate ASC )
+WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year (LogDate);
+PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Created';
+
+PRINT 'Working on table [dbo].[ShipmentQueue] ...';
+
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_ShipmentQueue_Completed  ' )
+BEGIN
+    DROP INDEX CIX_ShipmentQueue_Completed   ON dbo.ShipmentQueue;
+	PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Dropped';
+END;
+
+CREATE CLUSTERED INDEX CIX_ShipmentQueue_Completed  
+ON dbo.ShipmentQueue ( Completed ASC )
+WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year (Completed);
+PRINT '- Index [CIX_ShipmentQueue_Completed  ] Created';
+
 
 
 --===================================================================================================
@@ -256,18 +236,32 @@ PRINT '*** Create PKs ***';
 PRINT '******************';
 
 --************************************************
-PRINT 'Working on table [schemaName].[tableName] ...';
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
 
-IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'PK_tableName_originalPrimaryKeyColumnName_columnName' )
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'PK_BatchProcessingLog_ID_LogDate' )
 BEGIN
-    ALTER TABLE schemaName.tableName DROP CONSTRAINT PK_tableName_originalPrimaryKeyColumnName_columnName;
-	PRINT '- PK [PK_tableName_originalPrimaryKeyColumnName_columnName] Dropped';
+    ALTER TABLE dbo.BatchProcessingLog DROP CONSTRAINT PK_BatchProcessingLog_ID_LogDate;
+	PRINT '- PK [PK_BatchProcessingLog_ID_LogDate] Dropped';
 END;
 
-ALTER TABLE schemaName.tableName
-ADD CONSTRAINT PK_tableName_originalPrimaryKeyColumnName_columnName
-    PRIMARY KEY NONCLUSTERED ( originalPrimaryKeyColumnName, columnName)
-    WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_databaseName_partitionColumnType_partitionRange(columnName);
+ALTER TABLE dbo.BatchProcessingLog
+ADD CONSTRAINT PK_BatchProcessingLog_ID_LogDate
+    PRIMARY KEY NONCLUSTERED ( ID, LogDate)
+    WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year(LogDate);
+PRINT '- PK [PK_BatchProcessingLog_ID_LogDate] Created';
+
+PRINT 'Working on table [dbo].[ShipmentQueue] ...';
+
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'PK_ShipmentQueue_ID_Completed' )
+BEGIN
+    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT PK_ShipmentQueue_ID_Completed;
+	PRINT '- PK [PK_ShipmentQueue_ID_Completed] Dropped';
+END;
+
+ALTER TABLE dbo.ShipmentQueue
+ADD CONSTRAINT PK_ShipmentQueue_ID_Completed
+    PRIMARY KEY NONCLUSTERED ( ID, Completed)
+    WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year(Completed);
 PRINT '- PK [PK_tableName_originalPrimaryKeyColumnName_columnName] Created';
 
 
@@ -278,43 +272,67 @@ PRINT '- PK [PK_tableName_originalPrimaryKeyColumnName_columnName] Created';
 --PRINT '*** Create Unique Index ***';
 --PRINT '***************************';
 
-----************************************************
---PRINT 'Working on table [dbo].[tblLoadCustomer] ...';
-
---IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'UX_tblLoadCustomer_LoadCustomerID' )
---BEGIN
---    DROP INDEX UX_tblLoadCustomer_LoadCustomerID ON dbo.tblLoadCustomer;
---	PRINT '- Index [UX_tblLoadCustomer_LoadCustomerID] Dropped';
---END;
-
---CREATE UNIQUE NONCLUSTERED INDEX UX_tblLoadCustomer_LoadCustomerID
---ON dbo.tblLoadCustomer ( LoadCustomerID )
---WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON [PRIMARY];
---PRINT '- Index [UX_tblLoadCustomer_LoadCustomerID] Created';
---GO
-
-
 --===================================================================================================
 --[CREATE FK]
 --===================================================================================================
---PRINT '*****************';
---PRINT '*** Create FK ***';
---PRINT '*****************';
+PRINT '*****************';
+PRINT '*** Create FK ***';
+PRINT '*****************';
 
-----*****************************************************
---PRINT 'Working on table [dbo].[tblLoadStop] ...';
+--*****************************************************
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
 
---ALTER TABLE dbo.tblLoadStop WITH NOCHECK
---ADD CONSTRAINT FK_tblLoadStop_tblLoadCustomer_LoadCustomerID
---    FOREIGN KEY ( LoadCustomerID )
---    REFERENCES dbo.tblLoadCustomer ( LoadCustomerID ) 
---	ON DELETE CASCADE
---	ON UPDATE CASCADE;
---PRINT '- FK [FK_tblLoadStop_tblLoadCustomer_LoadCustomerID] Created';
+ALTER TABLE dbo.BatchProcessingLog WITH NOCHECK
+ADD CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID
+    FOREIGN KEY ( ActivityTypeId )
+    REFERENCES dbo.ActivityTypeLookup ( ActivityTypeID ) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
+PRINT '- FK [FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID] Created';
 
---ALTER TABLE dbo.tblLoadStop CHECK CONSTRAINT FK_tblLoadStop_tblLoadCustomer_LoadCustomerID;
---PRINT '- FK [FK_tblLoadStop_tblLoadCustomer_LoadCustomerID] Enabled';
---GO
+ALTER TABLE dbo.BatchProcessingLog CHECK CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID;
+PRINT '- FK [FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID] Enabled';
+GO
+
+ALTER TABLE dbo.BatchProcessingLog WITH NOCHECK
+ADD CONSTRAINT FK_BatchProcessingLog_BatchQueue_BatchId
+    FOREIGN KEY ( BatchId )
+    REFERENCES dbo.BatchQueue ( BatchId ) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
+PRINT '- FK [FK_BatchProcessingLog_BatchQueue_BatchId] Created';
+
+ALTER TABLE dbo.BatchProcessingLog CHECK CONSTRAINT FK_BatchProcessingLog_BatchQueue_BatchId;
+PRINT '- FK [FK_BatchProcessingLog_BatchQueue_BatchId] Enabled';
+GO
+
+
+PRINT 'Working on table [dbo].[ShipmentQueue] ...';
+
+ALTER TABLE dbo.ShipmentQueue WITH NOCHECK
+ADD CONSTRAINT FK_ShipmentQueue_BatchQueue_BatchId
+    FOREIGN KEY ( BatchId )
+    REFERENCES dbo.BatchQueue ( BatchId ) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
+PRINT '- FK [FK_ShipmentQueue_BatchQueue_BatchId] Created';
+
+ALTER TABLE dbo.ShipmentQueue CHECK CONSTRAINT FK_ShipmentQueue_BatchQueue_BatchId;
+PRINT '- FK [FK_ShipmentQueue_BatchQueue_BatchId] Enabled';
+GO
+
+ALTER TABLE dbo.ShipmentQueue WITH NOCHECK
+ADD CONSTRAINT FK_ShipmentQueue_TransactionTypeLookup_TypeID
+    FOREIGN KEY ( TransactionTypeId )
+    REFERENCES dbo.TransactionTypeLookup ( TypeID ) 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE;
+PRINT '- FK [FK_ShipmentQueue_TransactionTypeLookup_TypeID] Created';
+
+ALTER TABLE dbo.ShipmentQueue CHECK CONSTRAINT FK_ShipmentQueue_TransactionTypeLookup_TypeID;
+PRINT '- FK [FK_ShipmentQueue_TransactionTypeLookup_TypeID] Enabled';
+GO
+
 
 --===================================================================================================
 --[UPDATE STATS]
@@ -324,11 +342,13 @@ PRINT '*** Update Stats ***';
 PRINT '********************';
 
 --************************************************
-PRINT 'Working on table [schemaName].[tableName] ...';
+PRINT 'Working on table [dbo].[tableName] ...';
 
-UPDATE STATISTICS schemaName.tableName;
+UPDATE STATISTICS dbo.BatchProcessingLog;
 PRINT '- Statistics Updated';
 
+UPDATE STATISTICS dbo.ShipmentQueue;
+PRINT '- Statistics Updated';
 
 --===================================================================================================
 --[DONE]
