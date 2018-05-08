@@ -1,12 +1,12 @@
 /*
 DataTeam
-databaseName Partitioning
+LoadLink Partitioning
 
 Validation
 
 Run in DB01VPRD Equivilant 
 */
-USE databaseName
+USE LoadLink
 GO
 
 -- View Partitioned Table Information (Advanced) 
