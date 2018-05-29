@@ -21,7 +21,7 @@ Clustered Index: CIX_BatchProcessingLog_LogDate
 
 -- New --
 - PK
-	PK_BatchProcessingLog_ID
+	PK_BatchProcessingLog_ID_LogDate
 	
 - FK
 	FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID
@@ -55,7 +55,7 @@ Clustered Index: CIX_ShipmentQueue_Completed
 
 -- New --
 - PK
-	PK_DocumentManagementReport_Image_ImageId_CreateDate
+	PK_ShipmentQueue_ID_Completed
 	
 - FK
 	FK_ShipmentQueue_BatchQueue_BatchId

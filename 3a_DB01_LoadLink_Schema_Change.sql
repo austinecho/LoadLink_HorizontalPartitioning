@@ -218,13 +218,13 @@ PRINT 'Working on table [dbo].[ShipmentQueue] ...';
 IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_ShipmentQueue_Completed  ' )
 BEGIN
     DROP INDEX CIX_ShipmentQueue_Completed   ON dbo.ShipmentQueue;
-	PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Dropped';
+	PRINT '- Index [CIX_BatchProcessingLog_LogDate] Dropped';
 END;
 
-CREATE CLUSTERED INDEX CIX_ShipmentQueue_Completed  
-ON dbo.ShipmentQueue ( Completed ASC )
-WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year (Completed);
-PRINT '- Index [CIX_ShipmentQueue_Completed  ] Created';
+CREATE CLUSTERED INDEX CIX_ShipmentQueue_BatchId  
+ON dbo.ShipmentQueue ( BatchId ASC )
+WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_INTEGER_1Year (BatchId);
+PRINT '- Index [CIX_ShipmentQueue_BatchId] Created';
 
 
 
@@ -252,17 +252,17 @@ PRINT '- PK [PK_BatchProcessingLog_ID_LogDate] Created';
 
 PRINT 'Working on table [dbo].[ShipmentQueue] ...';
 
-IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'PK_ShipmentQueue_ID_Completed' )
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'PK_ShipmentQueue_ID_BatchId' )
 BEGIN
-    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT PK_ShipmentQueue_ID_Completed;
-	PRINT '- PK [PK_ShipmentQueue_ID_Completed] Dropped';
+    ALTER TABLE dbo.ShipmentQueue DROP CONSTRAINT PK_ShipmentQueue_ID_BatchId;
+	PRINT '- PK [PK_ShipmentQueue_ID_BatchId] Dropped';
 END;
 
 ALTER TABLE dbo.ShipmentQueue
-ADD CONSTRAINT PK_ShipmentQueue_ID_Completed
-    PRIMARY KEY NONCLUSTERED ( ID, Completed)
-    WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_DATETIME_1Year(Completed);
-PRINT '- PK [PK_tableName_originalPrimaryKeyColumnName_columnName] Created';
+ADD CONSTRAINT PK_ShipmentQueue_ID_BatchId
+    PRIMARY KEY NONCLUSTERED ( ID, BatchId)
+    WITH ( SORT_IN_TEMPDB = ON, ONLINE = ON ) ON PS_LoadLink_INTEGER_1Year(BatchID);
+PRINT '- PK [PK_ShipmentQueue_ID_BatchId] Created';
 
 
 --===================================================================================================

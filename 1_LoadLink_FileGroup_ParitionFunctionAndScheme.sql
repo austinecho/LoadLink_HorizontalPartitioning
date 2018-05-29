@@ -21,7 +21,7 @@ ELSE BEGIN PRINT 'ERROR: Server name not found. Process stopped.'; RETURN; END;
 --===================================================================================================
 PRINT '*** ADD FILE GROUP AND FILE***';
 
-IF NOT EXISTS ( SELECT 1 FROM sys.filegroups WHERE name = '$LoadLink_Archive' )
+IF NOT EXISTS ( SELECT 1 FROM sys.filegroups WHERE name = 'LoadLink_Archive' )
 BEGIN 
 	ALTER DATABASE LoadLink ADD FILEGROUP LoadLink_Archive;
 
@@ -70,6 +70,18 @@ BEGIN
 END;
 GO
 
+IF NOT EXISTS ( SELECT 1 FROM sys.partition_functions WHERE name = 'PF_LoadLink_INTEGER_1Year' )
+BEGIN
+    CREATE PARTITION FUNCTION PF_LoadLink_INTEGER_1Year ( INTEGER ) AS RANGE RIGHT FOR VALUES ( 303711 ); 
+
+    PRINT '- Partition Function [PF_LoadLink_INTEGER_1Year] added';
+END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Partition Function with same name already exists !!';
+END;
+GO
+
 --===================================================================================================
 --ADD PARTITION SCHEME
 --===================================================================================================
@@ -80,6 +92,18 @@ BEGIN
     CREATE PARTITION SCHEME PS_LoadLink_DATETIME_1Year AS PARTITION PF_LoadLink_DATETIME_1Year TO ( LoadLink_Archive, [PRIMARY] );
 
 	PRINT '- Partition Scheme [PS_LoadLink_DATETIME_1Year] added';
+END;
+ELSE
+BEGIN
+    PRINT '!! WARNING: Partition Scheme with same name already exists !!';
+END;
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM sys.partition_schemes WHERE name = 'PS_LoadLink_INTEGER_1Year' )
+BEGIN
+    CREATE PARTITION SCHEME PS_LoadLink_INTEGER_1Year AS PARTITION PF_LoadLink_INTEGER_1Year TO ( LoadLink_Archive, [PRIMARY] );
+
+	PRINT '- Partition Scheme [PS_LoadLink_INTEGER_1Year] added';
 END;
 ELSE
 BEGIN
