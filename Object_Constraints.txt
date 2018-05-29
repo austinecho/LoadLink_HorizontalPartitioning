@@ -36,7 +36,7 @@ Clustered Index: CIX_BatchProcessingLog_LogDate
 
 ** dbo.ShipmentQueue **
 Date Column: Completed (1 year)
-Clustered Index: CIX_ShipmentQueue_Completed 
+Clustered Index: CIX_ShipmentQueue_BatchId
 
 -- Current --
 
@@ -55,7 +55,7 @@ Clustered Index: CIX_ShipmentQueue_Completed
 
 -- New --
 - PK
-	PK_ShipmentQueue_ID_Completed
+	PK_ShipmentQueue_ID_BatchId
 	
 - FK
 	FK_ShipmentQueue_BatchQueue_BatchId
@@ -108,7 +108,7 @@ Clustered Index: CIX_BatchProcessingLog_LogDate
 
 ** dbo.ShipmentQueue **
 Date Column: Completed (1 year)
-Clustered Index: CIX_ShipmentQueue_Completed 
+Clustered Index: CIX_ShipmentQueue_BatchId
 
 -- Current --
 
@@ -127,11 +127,11 @@ Clustered Index: CIX_ShipmentQueue_Completed
 
 -- New --
 - PK
-	PK_DocumentManagementReport_Image_ImageId_CreateDate
+	PK_ShipmentQueue_ID_BatchId
 	
 - FK
-	FK_DocumentManagementReport_Image_DocumentManagementReport_Load_LoadID
-	FK_DocumentManagementReport_Image_DocumentManagementReport_SourceFile_SourceFileId
+	FK_ShipmentQueue_BatchQueue_BatchId
+	FK_ShipmentQueue_TransactionTypeLookup_TypeID
 	
 - Index
 	IX_DocumentManagementReport_Image_UploadId_Incl

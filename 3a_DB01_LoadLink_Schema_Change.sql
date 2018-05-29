@@ -202,7 +202,7 @@ PRINT '******************************';
 --************************************************
 PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
 
-IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_BatchProcessingLog_LogDate ' )
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_BatchProcessingLog_LogDate' )
 BEGIN
     DROP INDEX CIX_BatchProcessingLog_LogDate  ON dbo.BatchProcessingLog;
 	PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Dropped';
@@ -215,9 +215,9 @@ PRINT '- Index [CIX_BatchProcessingLog_LogDate ] Created';
 
 PRINT 'Working on table [dbo].[ShipmentQueue] ...';
 
-IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_ShipmentQueue_Completed  ' )
+IF EXISTS ( SELECT 1 FROM sys.sysindexes WHERE name = 'CIX_ShipmentQueue_BatchId' )
 BEGIN
-    DROP INDEX CIX_ShipmentQueue_Completed   ON dbo.ShipmentQueue;
+    DROP INDEX CIX_ShipmentQueue_BatchId    ON dbo.ShipmentQueue;
 	PRINT '- Index [CIX_BatchProcessingLog_LogDate] Dropped';
 END;
 
