@@ -40,7 +40,7 @@ BEGIN
 	ELSE IF ( SELECT @@SERVERNAME ) = 'DATATEAM4-DB01\DB01'
 	BEGIN
 		--DEV DT4 --Note: D:\Data\EchoTrak\EchoTrak_Primary.mdf --PRIMARY
-		ALTER DATABASE LoadLink ADD FILE ( NAME = 'LoadLink_Archive', FILENAME = N'D:\Data\LoadLink_Archive.NDF', SIZE = 6GB, MAXSIZE = UNLIMITED, FILEGROWTH = 1GB )
+		ALTER DATABASE LoadLink ADD FILE ( NAME = 'LoadLink_Archive', FILENAME = N'D:\Data\LoadLink_Archive.NDF', SIZE = 1GB, MAXSIZE = UNLIMITED, FILEGROWTH = 1GB )
 		TO FILEGROUP LoadLink_Archive;
 		PRINT '- File [LoadLink_Archive] added';
 	END;

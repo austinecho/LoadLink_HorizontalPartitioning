@@ -186,12 +186,26 @@ END;
 --PRINT '**********************';
 
 --===================================================================================================
---[ALTER NULL COLUMN AND ADD DF]
+--[ALTER NULL COLUMN]
 --===================================================================================================
---PRINT '************************************';
---PRINT '*** Alter NULL Column And Add DF ***';
---PRINT '************************************';
+PRINT '************************************';
+PRINT '*** Alter NULL Column***';
+PRINT '************************************';
 
+--******************************************************
+PRINT 'Working on table [dbo].[BatchProcessingLog] ...';
+
+IF EXISTS (   SELECT 1
+              FROM   sys.columns
+              WHERE  name = 'LogDate'
+                AND  object_id = OBJECT_ID( N'dbo.BatchProcessingLog' )
+                AND  is_nullable = 1 )
+BEGIN
+    ALTER TABLE dbo.BatchProcessingLog ALTER COLUMN LogDate DATETIME NOT NULL;
+    PRINT '- Column [LogDate] Changed to Not Null';
+END;
+
+GO
 --===================================================================================================
 --[CREATE CLUSTERED INDEX]
 --===================================================================================================
@@ -286,8 +300,6 @@ ALTER TABLE dbo.BatchProcessingLog WITH NOCHECK
 ADD CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID
     FOREIGN KEY ( ActivityTypeId )
     REFERENCES dbo.ActivityTypeLookup ( ActivityTypeID ) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE;
 PRINT '- FK [FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID] Created';
 
 ALTER TABLE dbo.BatchProcessingLog CHECK CONSTRAINT FK_BatchProcessingLog_ActivityTypeLookup_ActivityTypeID;
@@ -298,8 +310,6 @@ ALTER TABLE dbo.BatchProcessingLog WITH NOCHECK
 ADD CONSTRAINT FK_BatchProcessingLog_BatchQueue_BatchId
     FOREIGN KEY ( BatchId )
     REFERENCES dbo.BatchQueue ( BatchId ) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE;
 PRINT '- FK [FK_BatchProcessingLog_BatchQueue_BatchId] Created';
 
 ALTER TABLE dbo.BatchProcessingLog CHECK CONSTRAINT FK_BatchProcessingLog_BatchQueue_BatchId;
@@ -313,8 +323,6 @@ ALTER TABLE dbo.ShipmentQueue WITH NOCHECK
 ADD CONSTRAINT FK_ShipmentQueue_BatchQueue_BatchId
     FOREIGN KEY ( BatchId )
     REFERENCES dbo.BatchQueue ( BatchId ) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE;
 PRINT '- FK [FK_ShipmentQueue_BatchQueue_BatchId] Created';
 
 ALTER TABLE dbo.ShipmentQueue CHECK CONSTRAINT FK_ShipmentQueue_BatchQueue_BatchId;
@@ -325,8 +333,6 @@ ALTER TABLE dbo.ShipmentQueue WITH NOCHECK
 ADD CONSTRAINT FK_ShipmentQueue_TransactionTypeLookup_TypeID
     FOREIGN KEY ( TransactionTypeId )
     REFERENCES dbo.TransactionTypeLookup ( TypeID ) 
-	ON DELETE CASCADE
-	ON UPDATE CASCADE;
 PRINT '- FK [FK_ShipmentQueue_TransactionTypeLookup_TypeID] Created';
 
 ALTER TABLE dbo.ShipmentQueue CHECK CONSTRAINT FK_ShipmentQueue_TransactionTypeLookup_TypeID;
